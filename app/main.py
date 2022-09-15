@@ -42,3 +42,29 @@ wapi = FastAPI(
 @wapi.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url='/docs')
+
+
+
+
+
+@wapi.get("/username")
+async def get_username():
+  return {"user":"Ben Hart"}
+
+@wapi.get("/timestwo")
+async def times_two(num: int):
+  return {"result": num*2}
+
+@wapi.get("/addtwonumbers")
+async def add_two(num1: int, num2: int) -> object:
+  return {"result": num1 + num2}
+
+@wapi.get("/findpassword")
+async def find_password(name: str):
+  users = {"Ben": "bens password", "nicole": "bitchface"}
+  try:
+    return users[name]
+  except:
+    return {"Error": "User Not Found"}
+  
+  

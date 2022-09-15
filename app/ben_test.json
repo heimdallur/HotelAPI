@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Ben",
+        "age": 21,
+        "gender": "Male",
+        "inRelationship": true,
+        "partner":[{
+            "name": "Nicole",
+            "age": 19,
+            "gender": "female",
+            "isStinking": true
+        }],
+        "britishCitizen": true,
+        "friends": null,
+        "penisSizeInch": 0.1
+        
+    }
+]
