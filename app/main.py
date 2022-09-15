@@ -1,6 +1,13 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+import requests
+import json
 
+hotel_url = "https://hotels4.p.rapidapi.com"
+hotel_headers = {
+    'X-RapidAPI-Key': 'bb81d64da8msh55686902a97b128p14da0fjsne27d6f91ee56',
+    'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
+  }
 
 # Swagger UI Configuration
 swagger_ui_params = {
@@ -47,24 +54,53 @@ async def docs_redirect():
 
 
 
-@wapi.get("/username")
+@wapi.get("/username", tags=["Ben"])
 async def get_username():
   return {"user":"Ben Hart"}
 
-@wapi.get("/timestwo")
+@wapi.get("/timestwo", tags=["Ben"])
 async def times_two(num: int):
   return {"result": num*2}
 
-@wapi.get("/addtwonumbers")
+@wapi.get("/addtwonumbers", tags=["Ben"])
 async def add_two(num1: int, num2: int) -> object:
   return {"result": num1 + num2}
 
-@wapi.get("/findpassword")
+@wapi.get("/findpassword", tags=["Ben"])
 async def find_password(name: str):
   users = {"Ben": "bens password", "nicole": "bitchface"}
   try:
     return users[name]
   except:
     return {"Error": "User Not Found"}
+
+
+@wapi.get("/get_location", tags=["Hotels"])
+async def get_location(city:str) -> object:
   
+  endpoint = "/locations/v2/search"
   
+  querystring = {"query": city, "locale": "en_GB", "currency": "GBP"}
+  
+  response = requests.request("GET", f'{hotel_url}{endpoint}', headers=hotel_headers, params=querystring)
+  
+  return response.json()
+
+
+@wapi.get("/get_meta_data", tags=["Hotels"])
+async def get_meta_data(start_date:str, end_date:str) -> object:
+
+  endpoint = "/get-meta-data"
+
+  response = requests.request("GET", f'{hotel_url}{endpoint}', headers=hotel_headers)
+
+  uf_list = response.json()
+
+  f_list = {}
+  idx = 0
+
+  for i in uf_list:
+    f_list[idx] = i['name']
+    idx += 1
+
+  return f_list
