@@ -1,3 +1,4 @@
+from tabnanny import check
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 import requests
@@ -104,3 +105,36 @@ async def get_meta_data(start_date:str, end_date:str) -> object:
     idx += 1
 
   return f_list
+
+@wapi.get("/get_properties", tags=["Hotels"])
+async def get_properties(locationid: int, checkin: str, checkout:str) -> object:
+  
+  endpoint = "/properties/list"
+  
+  querystring = {"destinationId":locationid,"pageNumber":"1","pageSize":"25","checkIn":checkin,"checkOut":checkout,"adults1":"1","sortOrder":"PRICE","locale":"en_GB","currency":"GBP"}
+  
+  response = requests.request("GET", f'{hotel_url}{endpoint}', headers=hotel_headers, params=querystring)
+  
+  return response.json()
+
+@wapi.get("/get_details", tags=["Hotels"])
+async def get_details(ID: int) -> object:
+  
+  endpoint = "/properties/get-details"
+  
+  querystring = {"id": ID, "locale":"en_GB", "currency": "GBP"}
+  
+  response = requests.request("GET", f'{hotel_url}{endpoint}', headers=hotel_headers, params=querystring)
+  
+  return response.json()
+
+@wapi.get("/get_photo", tags=["Hotels"])
+async def get_photo(ID: int) -> object:
+  
+  endpoint = "/properties/get-hotel-photos"
+  
+  querystring = {"id": ID, "locale":"en_GB", "currency": "GBP"}
+  
+  response = requests.request("GET", f'{hotel_url}{endpoint}', headers=hotel_headers, params=querystring)
+  
+  return response.json()
